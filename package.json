@@ -1,0 +1,44 @@
+{
+  "version": "0.0.2",
+  "name": "@camoflage/grpc",
+  "description": "@camoflage/grpc",
+  "author": "beltebelt",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/@camoflage/grpc.es.mjs",
+    "./cjs": "./dist/@camoflage/grpc.cjs.js",
+    "./umd": "./dist/@camoflage/grpc.umd.js"
+  },
+  "main": "./dist/@camoflage/grpc.es.mjs",
+  "module": "./dist/@camoflage/grpc.es.mjs",
+  "types": "./dist/@camoflage/grpc.es.d.mts",
+  "scripts": {
+    "build": "rm -rf dist && rollup -c",
+    "dev": "rollup -c -w",
+    "test": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
+    "@types/bunyan": "^1.8.11",
+    "@types/bunyan-format": "^0.2.9",
+    "@types/jsonpath": "^0.2.4",
+    "rollup": "^3.0.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-ignore": "^1.0.10",
+    "rollup-plugin-ts": "^3.0.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.13",
+    "@grpc/proto-loader": "^0.7.10",
+    "bunyan": "^1.8.15",
+    "bunyan-format": "^0.2.1",
+    "jsonpath": "^1.1.1",
+    "prom-client": "^15.1.0",
+    "zod": "^3.22.4"
+  }
+}
