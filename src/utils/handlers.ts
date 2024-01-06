@@ -55,6 +55,7 @@ export class CamoflageGrpcHandler {
             if (fs.existsSync(mockFilePath)) {
                 const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: call.request, metadata: call.metadata })
                 const response = JSON.parse(content)
+                log.debug(response)
                 const { delay, error, headers, trailers, processedResponse } = this.processResponse(response)
                 if (beforeResponseHooks.length > 0) {
                     for (let i = 0; i < beforeResponseHooks.length; i++) {
@@ -106,6 +107,7 @@ export class CamoflageGrpcHandler {
                 const streamArr: string[] = content.split("====");
                 streamArr.forEach(async (stream: any, index: number) => {
                     const parsedStream = JSON.parse(stream.replace(os.EOL, ""));
+                    log.debug(parsedStream)
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(parsedStream);
                     if (beforeResponseHooks.length > 0) {
                         for (let i = 0; i < beforeResponseHooks.length; i++) {
@@ -164,6 +166,7 @@ export class CamoflageGrpcHandler {
                 if (fs.existsSync(mockFilePath)) {
                     const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: requests, metadata: call.metadata });
                     const response = JSON.parse(content);
+                    log.debug(response)
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(response);
                     if (beforeResponseHooks.length > 0) {
                         for (let i = 0; i < beforeResponseHooks.length; i++) {
@@ -226,6 +229,7 @@ export class CamoflageGrpcHandler {
                 requests.push(data);
                 const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: data, metadata: call.metadata });
                 const response = JSON.parse(content);
+                log.debug(response)
                 const { delay, error, headers, trailers, processedResponse } = this.processResponse(response.data);
                 if (beforeResponseHooks.length > 0) {
                     for (let i = 0; i < beforeResponseHooks.length; i++) {
@@ -256,6 +260,7 @@ export class CamoflageGrpcHandler {
             try {
                 const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: requests, metadata: call.metadata });
                 const response = JSON.parse(content);
+                log.debug(response)
                 if (response.end) {
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(response.end);
                     await sleep(delay);
