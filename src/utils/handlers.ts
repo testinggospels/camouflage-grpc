@@ -41,6 +41,7 @@ export class CamoflageGrpcHandler {
     public unaryHandler = async (call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUnaryData<any>) => {
         const startTime = process.hrtime();
         const handlerPath = call.getPath();
+        log.debug(`Call recieved for handler: ${handlerPath}`)
         const onRequestHooks = this.hooks[handlerPath]?.onRequest || [];
         const beforeResponseHooks = this.hooks[handlerPath]?.beforeResponse || [];
         const afterResponseHooks = this.hooks[handlerPath]?.afterResponse || [];
@@ -55,13 +56,13 @@ export class CamoflageGrpcHandler {
             if (fs.existsSync(mockFilePath)) {
                 const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: call.request, metadata: call.metadata })
                 const response = JSON.parse(content)
-                log.debug(response)
                 const { delay, error, headers, trailers, processedResponse } = this.processResponse(response)
                 if (beforeResponseHooks.length > 0) {
                     for (let i = 0; i < beforeResponseHooks.length; i++) {
                         await beforeResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
                     }
                 }
+                log.debug(response)
                 await sleep(delay)
                 if (headers) call.sendMetadata(headers)
                 if (trailers) {
@@ -107,13 +108,13 @@ export class CamoflageGrpcHandler {
                 const streamArr: string[] = content.split("====");
                 streamArr.forEach(async (stream: any, index: number) => {
                     const parsedStream = JSON.parse(stream.replace(os.EOL, ""));
-                    log.debug(parsedStream)
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(parsedStream);
                     if (beforeResponseHooks.length > 0) {
                         for (let i = 0; i < beforeResponseHooks.length; i++) {
                             await beforeResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
                         }
                     }
+                    log.debug(parsedStream)
                     await sleep(delay);
                     if (headers) call.sendMetadata(headers);
                     if (error) call.emit('error', error);
@@ -166,13 +167,13 @@ export class CamoflageGrpcHandler {
                 if (fs.existsSync(mockFilePath)) {
                     const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: requests, metadata: call.metadata });
                     const response = JSON.parse(content);
-                    log.debug(response)
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(response);
                     if (beforeResponseHooks.length > 0) {
                         for (let i = 0; i < beforeResponseHooks.length; i++) {
                             await beforeResponseHooks[i](call, requests, { delay, error, headers, trailers, processedResponse })
                         }
                     }
+                    log.debug(response)
                     await sleep(delay);
                     if (headers) call.sendMetadata(headers);
                     if (trailers) {
@@ -229,13 +230,13 @@ export class CamoflageGrpcHandler {
                 requests.push(data);
                 const content = this.helpers.parse(fs.readFileSync(mockFilePath, "utf-8").trim(), { request: data, metadata: call.metadata });
                 const response = JSON.parse(content);
-                log.debug(response)
                 const { delay, error, headers, trailers, processedResponse } = this.processResponse(response.data);
                 if (beforeResponseHooks.length > 0) {
                     for (let i = 0; i < beforeResponseHooks.length; i++) {
                         await beforeResponseHooks[i](call, data, { delay, error, headers, trailers, processedResponse })
                     }
                 }
+                log.debug(response)
                 await sleep(delay);
                 if (headers) call.sendMetadata(headers);
                 if (error) call.emit('error', error);
