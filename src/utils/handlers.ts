@@ -59,7 +59,7 @@ export class CamoflageGrpcHandler {
                 const { delay, error, headers, trailers, processedResponse } = this.processResponse(response)
                 if (beforeResponseHooks.length > 0) {
                     for (let i = 0; i < beforeResponseHooks.length; i++) {
-                        await beforeResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
+                        await beforeResponseHooks[i](call, call.request, { delay, error, headers, trailers, processedResponse })
                     }
                 }
                 log.debug(response)
@@ -73,7 +73,7 @@ export class CamoflageGrpcHandler {
                 this.collectMetrics(startTime, error, handlerPath, "unary")
                 if (afterResponseHooks.length > 0) {
                     for (let i = 0; i < afterResponseHooks.length; i++) {
-                        await afterResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
+                        await afterResponseHooks[i](call, call.request, { delay, error, headers, trailers, processedResponse })
                     }
                 }
             } else {
@@ -111,7 +111,7 @@ export class CamoflageGrpcHandler {
                     const { delay, error, headers, trailers, processedResponse } = this.processResponse(parsedStream);
                     if (beforeResponseHooks.length > 0) {
                         for (let i = 0; i < beforeResponseHooks.length; i++) {
-                            await beforeResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
+                            await beforeResponseHooks[i](call, call.request, { delay, error, headers, trailers, processedResponse })
                         }
                     }
                     log.debug(parsedStream)
@@ -126,7 +126,7 @@ export class CamoflageGrpcHandler {
                     this.collectMetrics(startTime, error, handlerPath, "server-stream")
                     if (afterResponseHooks.length > 0) {
                         for (let i = 0; i < afterResponseHooks.length; i++) {
-                            await afterResponseHooks[i](call, null, { delay, error, headers, trailers, processedResponse })
+                            await afterResponseHooks[i](call, call.request, { delay, error, headers, trailers, processedResponse })
                         }
                     }
                 })
